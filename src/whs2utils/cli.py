@@ -1,4 +1,5 @@
 import click
+import noise
 
 @click.group()
 def cli():
@@ -13,6 +14,7 @@ def todo():
     Example: whs2utils todo
     """
     print('Welcome to whs2utils')
+    noise.run()
 
 if __name__ == "__main__":
     todo()
