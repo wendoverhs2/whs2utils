@@ -280,6 +280,7 @@ def load_params_csv(file_path: str, barriers: Dict[str,Barrier], sourcesets: Dic
                 # This should always be positive for northbound trains and negative for southbound trains
                 param.toffset = param.toffset * - 1
 
+            # Number of sectors that the train spans
             param.tsects = math.ceil(param.tlen / param.slen)
 
             params[param.key] = param
@@ -390,19 +391,27 @@ def getNoise2(p: Param, bht, bht2, bpos, bpos2, dist, angle, tsect, bt, padj, ta
     bpos2 = (bpos2 + p.toffset) / math.cos(angle)
     dist = y / math.cos(angle)
 
+    # Not found a source for the reason for the 
+    # adjustment adjust of 2 / number of sector train spans for 400m long trains
+    # With a sector length of 12.5 metres = 2/32 adjustment factor
     fact400 = 1
     if p.tlen == 400:
         fact400 = 2
 
+    # Every sector produces rolling noise (wheels on the track)
     # ⚠️ Math.log10 in JS == math.log10 in Python
     s["rolling"] = dB(spl(p.sources["rolling"].sval + 30.0 * math.log10(p.kph)) * fact400 / p.tsects) - padj
+    
+    # Just the front of the train produces aerodynamic noise
     if tsect == 0:
         s["aero"] = p.sources["aero"].sval + 70.0 * math.log10(p.kph) - padj
     else:
         s["aero"] = 0
 
+    # Every sector produces engine noise on an electric train
     s["startup"] = dB(spl(p.sources["startup"].sval) * fact400 / p.tsects) - padj
 
+    # Just the back of the train produces pantograph noise
     if tsect == p.tsects - 1:
         s["panto"] = p.sources["panto"].sval + 70 * math.log10(p.kph) - padj
     else:
@@ -412,12 +421,19 @@ def getNoise2(p: Param, bht, bht2, bpos, bpos2, dist, angle, tsect, bt, padj, ta
         
         sht = p.sources[key].sht + p.railht #Add the rail height to the source height (which is relative to the rail)
         
+        # See 1.3.17 of spec: "geometric spreading"
         attnd = -14.5 * math.log10(dist / 25)
+        # See 1.3.17 of spec: "air absorbtion"
         attna = -dist / 120
 
+        # mph = mean propogation height
+        # Halfway between the top of the source/barrier and the rail height 
         mph = max(((max(sht, bht) + p.rht) / 2), 1)
+        # See 1.3.17 of spec: "ground attenuation"
+        # More height = Less ground attenuation
         attng = -dist / (130 * mph)
 
+        # Now allow for any attenuation due to the barrier(s) - zero, one or two barriers
         attnb = 0
         if not bht and not bht2:
             # No barriers defined at this train position
@@ -437,7 +453,6 @@ def getNoise2(p: Param, bht, bht2, bpos, bpos2, dist, angle, tsect, bt, padj, ta
             J = (abs(bpos - bpos2) / dist) ** 0.25
 
             # ⚠️ JS Math.pow(10, -x/10) handles negative bases differently than Python **.
-            
             # Note if this value is negative then the subsequent maths raises an error
             working = (10 ** (-attnba / 10)) + (10 ** (-attnbb * J / 10)) - 1
             attnb = -10 * math.log10(working)
