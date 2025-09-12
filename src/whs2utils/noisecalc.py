@@ -162,7 +162,7 @@ def getNoise2(p: Param, bht, bht2, bpos, bpos2, dist, angle, tsect, bt, padj, ta
 
         l[key] = lval
 
-    if p.v >= 202509:
+    if p.v >= 2509:
 
         # 250828 Align South Heath NDR Appendix D:
         # LpAFmax=MAX [ (RLpAF,max  BLpAF,max  SLpAF,max) , (RLpAF,max  PLpAF,max  SLpAF,max) ] (Equation 1)
