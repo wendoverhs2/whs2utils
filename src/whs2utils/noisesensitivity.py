@@ -222,23 +222,25 @@ def rht_minus_10_percent(p):
 # def tlen_x2(p):
 #     p.tlen = p.tlen * 2
 
-# @sensitivity
-# def tlen_200(p):
-#     p.tlen = 200.0
-
-# @sensitivity
-# def tlen_400(p):
-#     p.tlen = 400.0
+@sensitivity
+def tlen_200(p):
+    p.tlen = 200.0
 
 @sensitivity
-def tlen_slen_x2(p):
-    p.tlen = p.tlen * 2
-    p.slen = p.slen * 2
+def tlen_400(p):
+    p.tlen = 400.0
 
-@sensitivity
-def tlen_slen_x4(p):
-    p.tlen = p.tlen * 4
-    p.slen = p.slen * 4
+# Commented out 2025-10-07 - can't change slen without revisiting barrier definitions
+# @sensitivity
+# def tlen_slen_x2(p):
+#     p.tlen = p.tlen * 2
+#     p.slen = p.slen * 2
+
+# Commented out 2025-10-07 - can't change slen without revisiting barrier definitions
+# @sensitivity
+# def tlen_slen_x4(p):
+#     p.tlen = p.tlen * 4
+#     p.slen = p.slen * 4
 
 @sensitivity
 def down_330kph(p):
@@ -283,22 +285,8 @@ def up_342kph(p):
         p.toffset -= 6.135
 
 @sensitivity
-def down_299kph(p):
-    p.kph = 299.0
-    if p.dirn == "s":
-        p.dirn = "n"
-        p.toffset += 6.135
-
-@sensitivity
-def up_299kph(p):
-    p.kph = 299.0
-    if p.dirn == "n":
-        p.dirn = "s"
-        p.toffset -= 6.135
-
-@sensitivity
-def down_299kph(p):
-    p.kph = 299.0
+def down_300kph(p):
+    p.kph = 300.0
     if p.dirn == "s":
         p.dirn = "n"
         p.toffset += 6.135
@@ -311,8 +299,8 @@ def up_300kph(p):
         p.toffset -= 6.135
 
 @sensitivity
-def down_300kph(p):
-    p.kph = 300.0
+def down_315kph(p):
+    p.kph = 315.0
     if p.dirn == "s":
         p.dirn = "n"
         p.toffset += 6.135

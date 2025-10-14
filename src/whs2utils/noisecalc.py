@@ -167,10 +167,10 @@ def getNoise2(p: Param, bht, bht2, bpos, bpos2, dist, angle, tsect, bt, padj, ta
         # 250828 Align South Heath NDR Appendix D:
         # LpAFmax=MAX [ (RLpAF,max  BLpAF,max  SLpAF,max) , (RLpAF,max  PLpAF,max  SLpAF,max) ] (Equation 1)
         combo1 = log_sum([l["rolling"], l["aero"],   l["startup"]])  # R + B + S
-        combo2 = log_sum([l["rolling"], l["panto"], l["startup"]])  # R + P + S
-        combo3 = log_sum([l["rolling"], l["panto"], l["pantowell"], l["startup"]]) # TODO - spec not clear - check how to add in new term for panto recess
+        # combo2 = log_sum([l["rolling"], l["panto"], l["startup"]])  # R + P + S
+        combo2 = log_sum([l["rolling"], l["panto"], l["pantowell"], l["startup"]]) # TODO - spec not clear - check how to add in new term for panto recess
 
-        noise = max(combo1, combo2, combo3)
+        noise = max(combo1, combo2)
 
     else:
         noise = dB(

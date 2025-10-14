@@ -64,6 +64,7 @@ class SensitivityResult:
     key: str
     db: float
     spl: float
+    impacts: float
     basedb: float
     basespl: float
     deltadb: float
