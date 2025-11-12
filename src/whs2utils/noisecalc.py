@@ -103,12 +103,19 @@ def getNoise2(p: Param, bht, bht2, bpos, bpos2, dist, angle, tsect, bt, padj, ta
         s["startup"] = 0
 
     # Just the back of the train produces pantograph noise
-    if tsect == tsects - 1 and p.sources["panto"].sval:
+    include_panto = (tsect == tsects - 1)
+    # Except 400m trains have a panto at 200m from the front as well
+    if p.v >= 2511:
+        if not include_panto:
+            if p.tlen == 400.0 and (tsect * p.slen) >= 200.0 and ((tsect-1) * p.slen) < 200.0:
+                include_panto = True
+
+    if include_panto and p.sources["panto"].sval:
         s["panto"] = p.sources["panto"].sval + 70 * math.log10(p.kph) - padj
     else:
         s["panto"] = 0
 
-    if tsect == tsects - 1 and p.sources["pantowell"].sval:
+    if include_panto and p.sources["pantowell"].sval:
         s["pantowell"] = p.sources["pantowell"].sval + 70 * math.log10(p.kph) - padj
     else:
         s["pantowell"] = 0

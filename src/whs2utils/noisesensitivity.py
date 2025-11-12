@@ -25,6 +25,10 @@ def v_0(p):
 def v_2509(p):
     p.v = 2509
 
+@sensitivity
+def v_2511(p):
+    p.v = 2511
+
 # @sensitivity
 # def toffset_variant(p):
 #     if p.dirn == "n": # northbound = 'down' line = positive track offset 
@@ -340,13 +344,6 @@ def down_338kph(p):
 @sensitivity
 def up_297kph(p):
     p.kph = 297.0
-    if p.dirn == "n":
-        p.dirn = "s"
-        p.toffset -= 6.135
-
-@sensitivity
-def up_315kph(p):
-    p.kph = 315.0
     if p.dirn == "n":
         p.dirn = "s"
         p.toffset -= 6.135
