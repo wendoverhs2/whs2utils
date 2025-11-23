@@ -1,10 +1,13 @@
 import math
+import logging
 from noisemodels import *
 from noisecore import *
 
 EPS = 1e-12
 
 def barrier(hs, hb, hr, dsb, dsr, bt, corr):
+
+    logger = logger = logging.getLogger(__name__)
 
     #Barrier attenuation calculation
     #Parameters: height of source, barrier, receptor; shortest distance source-barrier, source-receptor, barrier type (a or r)
@@ -29,6 +32,8 @@ def barrier(hs, hb, hr, dsb, dsr, bt, corr):
         + math.sqrt((hb - hr) ** 2 + (dsr - dsb) ** 2)
         - math.sqrt((hr - hs) ** 2 + dsr ** 2)
     )
+
+    logger.debug(f"path difference {pd}")
 
     # Attenuation calculation
     atten = 0
@@ -84,6 +89,10 @@ def getNoise2(p: Param, bht, bht2, bpos, bpos2, dist, angle, tsect, bt, padj, ta
     if p.tlen == 400:
         fact400 = 2
 
+    # console.log ('getNoise2: x ' + x + ' y ' + y + ' bht ' + bht + ' bht2 ' + bht2 + ' bpos ' + bpos + ' bpos2 ' + bpos2 + ' dist ' + dist + ' angle ' + angle + ' tsect ' + tsect + ' bt ' + bt + ' padj ' + padj +' tadj ' + tadj);
+    logger = logging.getLogger(__name__)
+    logger.debug(f"getNoise2: {x} y {y} bht {bht} bht2 {bht2} bpos {bpos} bpos2 {bpos2} dist {dist} angle {angle} tsect {tsect} bt {bt} padj {padj} tadj {tadj}")
+
     # Every sector produces rolling noise (wheels on the track)
     if p.sources["rolling"].sval:
         s["rolling"] = dB(spl(p.sources["rolling"].sval + 30.0 * math.log10(p.kph)) * fact400 / tsects) - padj
@@ -119,6 +128,9 @@ def getNoise2(p: Param, bht, bht2, bpos, bpos2, dist, angle, tsect, bt, padj, ta
         s["pantowell"] = p.sources["pantowell"].sval + 70 * math.log10(p.kph) - padj
     else:
         s["pantowell"] = 0
+
+    #if (debug == 2) {console.log ('getNoise2: src '); console.log(src);}
+    logger.debug(f"getNoise2: src {s}")
 
     for key, sval in s.items():
         
@@ -161,13 +173,22 @@ def getNoise2(p: Param, bht, bht2, bpos, bpos2, dist, angle, tsect, bt, padj, ta
             working = max(working, EPS)
             attnb = -10 * math.log10(working)
 
+            #if (debug == 2) {console.log ('getNoise2: attnba ' + attnba + ' attnbb ' + attnbb + ' J ' + J + ' attnb ' + attnb);}
+            logger.debug(f"getNoise2: {attnba} attnbb {attnbb} J {J} attnb {attnb}")
+
         lval = sval + attnd + attna
         if bht > 0 or bht2 > 0:
             lval += attnb
         else:
             lval += attng
 
+        #if (debug == 2) {console.log ('getNoise2: key ' + key + ' src ' + src[key] + ' attnd ' + attnd + ' attna ' + attna + ' attng ' + attng + ' attnb ' + attnb);}
+        logger.debug(f"getNoise2: key {key} src {sval} attnd {attnd} attna {attna} attng {attng} attnb {attnb})")
+
         l[key] = lval
+
+    #console.log ('getNoise2: lamax '); console.log(lamax);
+    logger.debug(f"getNoise2: lamax {l}")
 
     if p.v >= 2509:
 
@@ -230,6 +251,10 @@ def getNoise(p: Param, distx, disty, tpos):
         else:
             sectt = sect - tsect
 
+        # if (debug) {console.log('getNoise starting sectt ' + sectt);}
+        logger = logging.getLogger(__name__)
+        logger.debug(f"getNoise starting sectt {sectt}")
+
         distt = (sectt + 0.5) * p.slen
         distxc = distx + distt
         dist = math.sqrt(distxc ** 2 + disty ** 2)
@@ -264,6 +289,13 @@ def getNoise(p: Param, distx, disty, tpos):
             padj,
             tadj
         )
+          
+        # if (debug) {
+        #     let data = {distx: distx, disty: disty, tpos: tpos, sect: sect, sects: sects, tsect0: tsect0, tsect1: tsect1, tsect: tsect, sectt: sectt, sectt1: sectt1, sectt2: sectt2, distxc: distxc, dist: dist, angle: angle, bht: bhts[sectt], bpos: bposs[sectt], tadj: tadj, noise: noise}; 
+        #     console.log ('getNoise: data '); console.log(data);
+        # }
+
+        logger.debug(f"distx: {distx}, disty: {disty}, tpos: {tpos}, sect: {sect}, sects: {sects}, tsect0: {tsect0}, tsect1: {tsect1}, tsect: {tsect}, sectt: {sectt}, sectt1: {sectt1}, sectt2: {sectt2}, distxc: {distxc}, dist: {dist}, angle: {angle}, bht: {p.barrier1.bht[sectt]}, bpos: {p.barrier1.bpos[sectt]}, tadj: {tadj}, noise: {noise}")
 
         # ⚠️ summing in SPL domain: Python spl() equivalent used
         splev += spl(noise)

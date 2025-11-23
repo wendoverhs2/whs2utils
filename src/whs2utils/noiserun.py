@@ -8,11 +8,19 @@ from noisemodels import *
 from noiseio import *
 from noisecalc import *
 from noisesensitivity import *
+import logging
 
 def run():
 
     # Generate a unique run ID of 14 characters from the system date time
     run = datetime.now().strftime("%Y%m%d%H%M%S")
+
+    logging.basicConfig(
+        filename=f"noisedata/logs/log-{run}.log",
+        filemode="w",
+        level=logging.DEBUG, # logging.INFO
+        format="%(asctime)s [%(levelname)s] %(message)s",
+    )
 
     # Load the input data
     print("Loading receptors")

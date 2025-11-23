@@ -6,7 +6,7 @@ from noisemodels import Param
 sensitivity_funcs = []
 
 def sensitivity(func):
-    sensitivity_funcs.append(func)
+    #sensitivity_funcs.append(func)
     return func
 
 @sensitivity
@@ -17,17 +17,21 @@ def tlen_200(p):
 def tlen_400(p):
     p.tlen = 400.0
 
-@sensitivity
-def v_0(p):
-    p.v = 0
+# @sensitivity
+# def v_0(p):
+#     p.v = 0
+
+# @sensitivity
+# def v_2509(p):
+#     p.v = 2509
+
+# @sensitivity
+# def v_2511(p):
+#     p.v = 2511
 
 @sensitivity
-def v_2509(p):
-    p.v = 2509
-
-@sensitivity
-def v_2511(p):
-    p.v = 2511
+def v_2510(p):
+    p.v = 2510
 
 # @sensitivity
 # def toffset_variant(p):
@@ -117,21 +121,21 @@ def v_2511(p):
 #     p.sources["panto"].sval = 0
 #     # p.sources["pantowell"].sval = 0
 
-@sensitivity
-def sht_plus_10_percent(p):
-    factor_sht(p.sources,1.1)
+# @sensitivity
+# def sht_plus_10_percent(p):
+#     factor_sht(p.sources,1.1)
 
-@sensitivity
-def sht_minus_10_percent(p):
-    factor_sht(p.sources,1.0/1.1)
+# @sensitivity
+# def sht_minus_10_percent(p):
+#     factor_sht(p.sources,1.0/1.1)
 
-@sensitivity
-def sht_minus_1(p):
-    shift_sht(p.sources,-1)
+# @sensitivity
+# def sht_minus_1(p):
+#     shift_sht(p.sources,-1)
 
-@sensitivity
-def sht_plus_1(p):
-    shift_sht(p.sources,+1)
+# @sensitivity
+# def sht_plus_1(p):
+#     shift_sht(p.sources,+1)
 
 # @sensitivity
 # def kph_plus_10_percent(p):
@@ -141,13 +145,13 @@ def sht_plus_1(p):
 # def kph_minus_10_percent(p):
 #     p.kph = p.kph / 1.1 
 
-@sensitivity
-def railht_plus_10_percent(p):
-    p.railht = p.railht * 1.1 
+# @sensitivity
+# def railht_plus_10_percent(p):
+#     p.railht = p.railht * 1.1 
 
-@sensitivity
-def railht_minus_10_percent(p):
-    p.railht = p.railht / 1.1 
+# @sensitivity
+# def railht_minus_10_percent(p):
+#     p.railht = p.railht / 1.1 
 
 # @sensitivity
 # def reverse_direction(p):
@@ -205,29 +209,29 @@ def railht_minus_10_percent(p):
 # def plen_minus_10_percent(p):
 #     p.plen = p.plen / 1.1
 
-@sensitivity
-def refpt_zero(p):
-    p.refpt = 0.0
+# @sensitivity
+# def refpt_zero(p):
+#     p.refpt = 0.0
 
-@sensitivity
-def refpt_plus_10_percent(p):
-    p.refpt = p.refpt * 1.1
+# @sensitivity
+# def refpt_plus_10_percent(p):
+#     p.refpt = p.refpt * 1.1
 
-@sensitivity
-def refpt_minus_10_percent(p):
-    p.refpt = p.refpt / 1.1
+# @sensitivity
+# def refpt_minus_10_percent(p):
+#     p.refpt = p.refpt / 1.1
 
-@sensitivity
-def rht_1point8(p):
-    p.rht = 1.8
+# @sensitivity
+# def rht_1point8(p):
+#     p.rht = 1.8
 
-@sensitivity
-def rht_plus_10_percent(p):
-    p.rht = p.rht * 1.1
+# @sensitivity
+# def rht_plus_10_percent(p):
+#     p.rht = p.rht * 1.1
 
-@sensitivity
-def rht_minus_10_percent(p):
-    p.rht = p.rht / 1.1
+# @sensitivity
+# def rht_minus_10_percent(p):
+#     p.rht = p.rht / 1.1
 
 @sensitivity
 def down_330kph(p):
